@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React from 'react'
+import AllOffers from './components/AllOffers'
+import AllRequests from './components/AllRequests'
+import Requests from './components/Requests'
 import './App.css';
 
 function App() {
+
+  const[offers, setOffers]=React.useState([])
+  React.useEffect(()=>{
+    fetch("http://localhost:8080/offers")
+    .then(res=>res.json())
+    .then((result)=>{setOffers(result)})
+  })
+
+  const[requests, setRequests]=React.useState([])
+  React.useEffect(()=>{
+    fetch("http://localhost:8080/requests")
+    .then(res=>res.json())
+    .then((result)=>{setRequests(result)})
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+        <AllOffers offers={offers}/>
+        {/* <Requests/> */}
+        <AllRequests requests={requests}/>
     </div>
   );
 }
