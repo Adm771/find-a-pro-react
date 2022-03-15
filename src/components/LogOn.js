@@ -1,50 +1,29 @@
-import { useAuthContext, useAuthContextUpdate, useAuthUserContext, useAuthUserContextUpdate } from '../contexts/AuthContextProvider';
-import React, { useState } from 'react'
+import UserContext from '../contexts/UserContextProvider'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from './Header'
 
 const LogOn = () => {
-
-  const isAuthenticatedValue = useAuthContext();
-  const isAuthenticatedValueUpdate = useAuthContextUpdate();
-  const isAuthenticatedUserValue = useAuthUserContext();
-  const isAuthenticatedUserValueUpdate = useAuthUserContextUpdate();
 
   const [email, setEmai] = useState();
   const [password, setPassword] = useState();
 
   let navigate = useNavigate();
 
-  // proper logging needed - this only for creating context purposes
-  const [users, setUsers] = useState();
+  const { users, loggedUser, setLoggedUser } = useContext(UserContext)
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // proper async await needed
-    await fetch('http://localhost:8080/api/v1/users')
-    .then(response => response.json())
-    .then((result) => setUsers(result))
-    // .then(result => console.log(result))
-
     console.log(users)
-    const verifiedUsers = users.filter(user => user.email === email && user.password === password);
-    const verifiedUser = verifiedUsers[0]
-    console.log(verifiedUsers[0]);
-    console.log(verifiedUser);
-    console.log(isAuthenticatedValue)
-    if (verifiedUser) {
-      isAuthenticatedValueUpdate()
-      isAuthenticatedUserValueUpdate(verifiedUser)
-      console.log(isAuthenticatedUserValue)
-    }
-
+    const verifiedUser = await users.filter(dataUser => dataUser.email === email && dataUser.password === password)[0];
+    setLoggedUser(verifiedUser)
+    
     navigate("/customerRequests")
   }
 
   return (
     <div>
-        {/* < Button100 text={"Customer log on"} color={"DodgerBlue"} onClick={showCustomerDashboard}/>
-        < Button100 text={"Handyman log on"} color={"DodgerBlue"} onClick={showHandymanDashboard}/> */}
         <Header title="Log in"/>
         < form className="form-control">
           <input value={email} type="text" placeholder="Login" onChange={(e) => setEmai(e.target.value)}></input>

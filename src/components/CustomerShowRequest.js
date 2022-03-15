@@ -35,7 +35,7 @@ const CustomerShowRequest = () => {
         <div className='btnContainer'> 
         {/* <Button text={"Edit request details"} color={"green"} />
         <Button text={"Delete request"} color={"red"} /> */}
-        <Button text={"Show matching offers"} color={"grey"} onClick={()=>{navigate("/allmatchedoffers/:requestId")}}/>
+        <Button text={"Show matching offers"} color={"grey"} onClick={()=>{navigate(`/allmatchedoffers/${request.requestId}`)}}/>
         </div>
     </div>
   )

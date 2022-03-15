@@ -1,21 +1,18 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import CustomerRequest from './CustomerRequest'
 import Header from './Header'
 import Button100 from './Button100'
 import { useNavigate } from "react-router-dom";
-import { useAuthUserContext } from '../contexts/AuthContextProvider';
+import UserContext from '../contexts/UserContextProvider'
+import RequestContext from '../contexts/RequestContextProvider'
 
 const CustomerRequests = () => {
-  const isAuthenticatedUserValue = useAuthUserContext();
+  const {loggedUser} = useContext(UserContext);
+  console.log(loggedUser)
+  const {requestsByUserId, getRequestsByUserId} = useContext(RequestContext);
 
-  const[requests, setRequests]=React.useState([])
   React.useEffect(()=>{
-    let userId = isAuthenticatedUserValue.userId
-    fetch(`http://localhost:8080/api/v1/requests/${userId}`)
-    .then(res=>res.json())
-    .then((result)=>{setRequests(result)})
-    // .then((result) => console.log(result))
-    .catch((err)=>{console.log(err)})
+    getRequestsByUserId(loggedUser.userId)
   }, [])
 
   let navigate = useNavigate();
@@ -25,7 +22,7 @@ const CustomerRequests = () => {
     <div id="customerRequests" className="container" >
       <Header title="Customers requests" />
       <Button100 color="DodgerBlue" text="Add request" onClick={()=>{navigate("/addrequest")}}/>
-      {requests.map((request) => (
+      {requestsByUserId.map((request) => (
       <CustomerRequest key={request.requestId} request={request}/>
       ))}
     </div>

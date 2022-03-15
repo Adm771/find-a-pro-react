@@ -1,15 +1,15 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Review from './Review'
 import Header from './Header'
 import Button100 from './Button100'
-import { useAuthUserContext } from '../contexts/AuthContextProvider';
+import UserContext from '../contexts/UserContextProvider'
 
 const CustomerReviews = () => {
-  const isAuthenticatedUserValue = useAuthUserContext();
+  const {loggedUser} = useContext(UserContext);
 
   const[reviews, setReviews]=React.useState([])
   React.useEffect(()=>{
-    let userId = isAuthenticatedUserValue.userId
+    let userId = loggedUser.userId
     // endpoint needed
     fetch(`http://localhost:8080/api/v1/reviews/${userId}`)
     .then(res=>res.json())

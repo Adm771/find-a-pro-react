@@ -1,61 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Button from './Button'
 import { useNavigate } from "react-router-dom";
-import { useAuthUserContext } from '../contexts/AuthContextProvider';
+import UserContext from '../contexts/UserContextProvider'
+import RequestContext from '../contexts/RequestContextProvider'
 
 const AddRequest = () => {
-  const isAuthenticatedUserValue = useAuthUserContext();
+  const {loggedUser} = useContext(UserContext);
+  const {addRequest} = useContext(RequestContext);
   
   const[title, setTitle]=React.useState()
   const[payment, setPayment]=React.useState()
   const[description, setDescription]=React.useState()
-  const[publishedOn, setPublishedOn]=React.useState(new Date().toLocaleDateString + ' ' + new Date().toLocaleTimeString)
+  const[publishedOn, setPublishedOn]=React.useState("2007-12-03T10:15:30")
   const[archived, setArchived]=React.useState(false)
-  const[serviceCategory, setServiceCategory]=React.useState()
+  const[serviceCategoryId, setServiceCategoryId]=React.useState()
   const[postCode, setPostCode]=React.useState()
   const[daySlot, setDaySlot]=React.useState('')
   const[timeSlot, setTimeSlot]=React.useState('')
-  const[userId, setUserId]=React.useState(isAuthenticatedUserValue.userId)
+  const[userId, setUserId]=React.useState(loggedUser.userId)
   const[handymanId, setHandymanId]=React.useState('')
   const[confirmed, setConfirmed]=React.useState(false)
 
   const[listOfServiceCategories, setListOfServiceCategories]=React.useState([])
   React.useEffect(() => {
-    // endpoint needed
     fetch("http://localhost:8080/api/v1/services")
     .then(res=>res.json())
-    // .then((result) => console.log(result))
     .then(result=>{setListOfServiceCategories(result)})
     .catch((err)=>{console.log(err)})
   }, [])
 
-  const onSubmit = (e) => {
-      e.preventDefault()
-
-      console.log(isAuthenticatedUserValue)
-      console.log(isAuthenticatedUserValue.id)
-      const newRequest={title : title, payment : payment, description : description, publishedOn: publishedOn,
-        archived: archived, serviceCategory : serviceCategory, postCode : postCode, daySlot : daySlot, 
-        timeSlot : timeSlot, userId : userId, handymanId : handymanId, confirmed : confirmed}
-      console.log(newRequest)
-      fetch("http://localhost:8080/api/v1/requests",{
-        method: "POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(newRequest)})
-        .then(()=>(alert("New request added")))
-        .catch((err)=>{console.log(err)})
-
-      navigate("/")
+  const getServicesFromList = () => {
+    listOfServiceCategories.map((service) => { 
+          console.log(service); 
+          return (<option key={service.id} value={service.id}>{service.name}</option>) 
+      })
   }
-    
-    const getServicesFromList = () => {
-      listOfServiceCategories.map((service) => { 
-            console.log(service); 
-            return (<option key={service.id} value={service.id}>{service.name}</option>) 
-        })
-    }
 
-    let navigate = useNavigate();
+  const onSubmit = (e) => {
+    e.preventDefault()
+
+    const newRequest={title : title, payment : payment, description : description, publishedOn: publishedOn,
+        archived: archived, serviceCategoryId : serviceCategoryId, postCode : postCode, daySlot : daySlot, 
+        timeSlot : timeSlot, userId : userId, handymanId : handymanId, confirmed : confirmed}
+    console.log(newRequest)
+
+    addRequest(newRequest)
+
+    navigate("/customerrequests")
+  }
+
+  let navigate = useNavigate();
 
   return (
     <div id="addRequest" className="container">
@@ -68,8 +62,8 @@ const AddRequest = () => {
           </div>
           <div className='form-control'>
             <select name='add-service' 
-              value={serviceCategory} 
-              onChange={(e) => setServiceCategory(e.target.value)}>
+              value={serviceCategoryId} 
+              onChange={(e) => setServiceCategoryId(e.target.value)}>
                 <option value="" disabled hidden default>Set service</option>
                 {listOfServiceCategories.map((serviceCategory) => (<option key={serviceCategory.id} value={serviceCategory.id}>{serviceCategory.name}</option>) )}
             </select>
@@ -105,7 +99,7 @@ const AddRequest = () => {
               />
           </div>
           <input type="submit" value='Send' className='btn' onClick={onSubmit} style={{ background : "green", textAlign : "center" }} />
-          <Button text={"Cancel"} color={"red"} onClick={()=>{navigate("/")}}/>
+          <Button text={"Cancel"} color={"red"} onClick={()=>{navigate("/customerrequests")}}/>
         </form>    
     </div>
 

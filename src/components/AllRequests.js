@@ -1,19 +1,17 @@
-import React from 'react'
+import React, {useContext}  from 'react'
 import Request from './Request'
 import Header from './Header'
 import Button100 from './Button100'
 import { useNavigate } from "react-router-dom";
+import RequestContext from '../contexts/RequestContextProvider'
 
 const AllRequests = () => {
-
-  const[requests, setRequests]=React.useState([])
-  React.useEffect(()=>{
-    fetch(`http://localhost:8080/api/v1/requests/`)
-    .then(res=>res.json())
-    // .then((result) => console.log(result))
-    .then((result)=>{setRequests(result)})
-    .catch((err)=>{console.log(err)})
-  }, [])
+  
+    const {requests, getRequests} = useContext(RequestContext);
+  
+    React.useEffect(()=>{
+      getRequests()
+    }, [])
 
   let navigate = useNavigate();
 

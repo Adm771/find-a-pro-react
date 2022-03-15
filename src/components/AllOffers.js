@@ -1,16 +1,14 @@
-import React from 'react'
-import Offer from './MatchedOffer'
+import React, {useContext} from 'react'
+import Offer from './Offer'
 import Header from './Header'
+import OfferContext from '../contexts/OfferContextProvider'
 
 const AllOffers = () => {
 
-  const[offers, setOffers]=React.useState([])
+  const {offers, getOffers} = useContext(OfferContext);
+
   React.useEffect(()=>{
-    fetch("http://localhost:8080/api/v1/offers")
-    .then(res=>res.json())
-    .then((result)=>{setOffers(result)})
-    // .then((result) => console.log(result))
-    .catch((err)=>{console.log(err)})
+   getOffers()
   }, [])
 
   return (

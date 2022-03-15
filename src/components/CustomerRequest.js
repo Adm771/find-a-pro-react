@@ -1,20 +1,16 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Button from './Button';
 import Button100 from './Button100';
 import CustomerShowRequest from './CustomerShowRequest'
 import CustomerAddReview from './CustomerAddReview'
 import { useNavigate } from "react-router-dom";
+import RequestContext from '../contexts/RequestContextProvider'
 
 const CustomerRequest = ({request}) => {
 
-  const navigate = useNavigate();
+  const {deleteRequest} = useContext(RequestContext);
 
-  const deleteRequest = () => {
-    fetch(`http://localhost:8080/request/${request.requestId}`, 
-    {method: "DELETE"})
-    .then(()=>(alert("Request deleted")))
-    .catch((err)=>{console.log(err)})
-  }
+  const navigate = useNavigate();
 
   return (
     <>
@@ -41,7 +37,7 @@ const CustomerRequest = ({request}) => {
         : (
           <div className='btnContainer'> 
           <Button text={"Edit request details"} color={"green"} onClick={()=>{navigate(`/request/edit/${request.requestId}`)}}/>
-          <Button text={"Delete request"} color={"red"} onClick={deleteRequest}/>
+          <Button text={"Delete request"} color={"red"} onClick={() => deleteRequest(request.requestId)}/>
           <Button text={"Show request details"} color={"grey"} onClick={()=>{navigate(`/request/${request.requestId}`)}}/>
           </div>) }
         </div>

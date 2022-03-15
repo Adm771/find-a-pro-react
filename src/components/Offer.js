@@ -1,8 +1,12 @@
 import React from 'react'
 import Button100 from './Button100'
 import Button from './Button'
+import { useNavigate } from "react-router-dom";
 
 const Offer = ({offer}) => {
+
+  const navigate = useNavigate();
+
   return (
     <div className='offer'>
         <p> Offer id: {offer.offerId}</p> 
@@ -16,7 +20,7 @@ const Offer = ({offer}) => {
         <p> Handyman id: {offer.handymanId}</p>
       <div className='btnContainer'> 
           <Button text={"Ask handyman"} color={"black"} />
-          <Button text={"Show handyman details"} color={"grey"} />
+          <Button text={"Show offer and handyman details"} color={"grey"} onClick={()=>{navigate(`/offer/${offer.offerId}`)}}/>
       </div>
     </div>
   )}
