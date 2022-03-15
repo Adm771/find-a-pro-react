@@ -12,13 +12,20 @@ import CustomerShowRequest from './components/CustomerShowRequest'
 import AddRequest from './components/AddRequest'
 import EditRequest from './components/EditRequest'
 import AllMatchedOffers from './components/AllMatchedOffers'
-import { AuthContextProvider } from './contexts/AuthContextProvider'
+import OfferShow from './components/OfferShow'
+
+import { UserContextProvider } from './contexts/UserContextProvider'
+import { RequestContextProvider } from './contexts/RequestContextProvider'
+import { OfferContextProvider } from './contexts/OfferContextProvider'
+
 
 function App() {
 
   return (
     <div className="app">
-      < AuthContextProvider >
+      < UserContextProvider >
+      < RequestContextProvider >
+      < OfferContextProvider>
         <BrowserRouter>
           <Header title="Customer dashboard"/>
           <NavBar/>
@@ -29,7 +36,9 @@ function App() {
               <Route path="/alloffers" element={ <AllOffers /> } /> 
               <Route path="/reviews" element={ <CustomerReviews /> } />
               <Route path="/request/:requestId" element={ <CustomerShowRequest /> } />
+              <Route path="/offer/:offerId" element={ <OfferShow /> } />
               <Route path="/request/edit/:requestId" element={ <EditRequest /> } />
+              <Route path="/customerrequests" element={ <CustomerRequests /> } />
               <Route path="*" element={ <CustomerRequests /> } />
               <Route path="/allmatchedoffers/:requestId" element={ <AllMatchedOffers /> } /> 
             </Routes>
@@ -38,7 +47,9 @@ function App() {
             <Header title="Handyman dashboard"/>
           </div>
         </BrowserRouter>
-      </AuthContextProvider>
+      </OfferContextProvider>
+      </RequestContextProvider>
+      </UserContextProvider>
     </div>
   );
 }
